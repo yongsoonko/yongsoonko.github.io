@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>고용순 - Backend Developer Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .slide {
+            background: white;
+            border-radius: 15px;
+            padding: 60px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            min-height: 600px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        
+        /* PPT Print Styles */
+        @media print {
+            @page {
+                size: 297mm 210mm; /* A4 Landscape */
+                margin: 0;
+            }
+            
+            body {
+                margin: 0;
+                padding: 0;
+                background: white;
+            }
+            
+            .container {
+                margin: 0;
+                padding: 0;
+                max-width: none;
+            }
+            
+            .slide {
+                width: 297mm;
+                height: 210mm;
+                margin: 0;
+                padding: 40mm;
+                border-radius: 0;
+                box-shadow: none;
+                page-break-after: always;
+                page-break-inside: avoid;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+            
+            .slide:last-child {
+                page-break-after: avoid;
+            }
+            
+            /* Ensure title slides fill the page */
+            .title-slide {
+                padding: 0;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
+            /* Adjust font sizes for print */
+            h1 {
+                font-size: 3.5em !important;
+            }
+            
+            h2 {
+                font-size: 2.2em !important;
+            }
+            
+            .project-detail-title {
+                font-size: 2em !important;
+            }
+            
+            /* Ensure images fit properly */
+            .project-image-container img {
+                max-height: 280px !important;
+            }
+            
+            /* Hide slide numbers in print */
+            .slide-number {
+                display: none;
+            }
+            
+            /* Ensure backgrounds print */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+        }
+        
+        /* Title Slide */
+        .title-slide {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .title-slide h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+            animation: fadeInDown 1s;
+        }
+        
+        .title-slide .subtitle {
+            font-size: 1.8em;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            animation: fadeInUp 1s 0.3s both;
+        }
+        
+        .contact-info {
+            display: flex;
+            gap: 30px;
+            margin-top: 30px;
+            animation: fadeInUp 1s 0.6s both;
+        }
+        
+        .contact-info span {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1em;
+        }
+        
+        /* Profile Slide */
+        .profile-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 50px;
+            align-items: center;
+        }
+        
+        .profile-left h2 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+        
+        .profile-info {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #333;
+        }
+        
+        .profile-info p {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .skills-container {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        
+        .skills-container h3 {
+            color: #764ba2;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .skill-tag {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+        
+        /* Experience Slide */
+        .experience-item {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .experience-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .company-name {
+            font-size: 1.8em;
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .period {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .role {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .experience-details {
+            color: #555;
+            line-height: 1.8;
+        }
+        
+        .experience-details ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .experience-details li {
+            margin-bottom: 8px;
+        }
+        
+        /* Project Detail Slide */
+        .project-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+        
+        .project-detail-title {
+            font-size: 2.5em;
+            color: #667eea;
+        }
+        
+        .project-company-badge {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-size: 1.1em;
+        }
+        
+        .project-detail-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        
+        .project-image-container {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .project-image-container img {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .project-info {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .project-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 3px solid #667eea;
+        }
+        
+        .project-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .project-section ul {
+            margin-left: 20px;
+            line-height: 1.8;
+            color: #555;
+        }
+        
+        .project-section li {
+            margin-bottom: 8px;
+        }
+        
+        .tech-stack-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .tech-badge {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+        
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .slide-number {
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            color: #999;
+            font-size: 0.9em;
+        }
+        
+        h2 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+            
+            .profile-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .project-detail-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .title-slide h1 {
+                font-size: 2.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Slide 1: Title -->
+        <div class="slide title-slide">
+            <h1>고용순</h1>
+            <p class="subtitle">Backend Developer Portfolio</p>
+            <div class="contact-info">
+                <span>📧 goys5228@gmail.com</span>
+                <span>📱 010-9261-0177</span>
+                <span>🏢 서울 강서구</span>
+            </div>
+            <div class="slide-number">1</div>
+        </div>
+        
+        <!-- Slide 2: Profile & Skills -->
+        <div class="slide">
+            <div class="profile-content">
+                <div class="profile-left">
+                    <h2>Profile</h2>
+                    <div class="profile-info">
+                        <p>👨‍💻 <strong>백엔드 개발자</strong></p>
+                        <p>🎓 서울과학기술대학교 컴퓨터공학과</p>
+                        <p>💼 총 경력: 3년 8개월</p>
+                    </div>
+                </div>
+                <div class="skills-container">
+                    <h3>Technical Skills</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Java</span>
+                        <span class="skill-tag">Spring Boot</span>
+                        <span class="skill-tag">JPA</span>
+                        <span class="skill-tag">MySQL</span>
+                        <span class="skill-tag">AWS</span>
+                        <span class="skill-tag">Docker</span>
+                        <span class="skill-tag">Git</span>
+                        <span class="skill-tag">GitHub Actions</span>
+                        <span class="skill-tag">Jenkins</span>
+                        <span class="skill-tag">SonarQube</span>
+                        <span class="skill-tag">NGINX</span>
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">FastAPI</span>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">2</div>
+        </div>
+        
+        <!-- Slide 3: Experience -->
+        <div class="slide">
+            <h2>Experience</h2>
+            
+            <div class="experience-item">
+                <div class="experience-header">
+                    <span class="company-name">㈜핀투비</span>
+                    <span class="period">2023.02 ~ 2024.07 (1년 6개월)</span>
+                </div>
+                <div class="role">프로덕트팀 · 매니저</div>
+                <div class="experience-details">
+                    <strong>동남아 B2B 핀테크 서비스 개발 및 운영</strong>
+                    <ul>
+                        <li>매출채권 공급망 플랫폼(SCF) 유지 보수 및 고도화</li>
+                        <li>AWS CodeDeploy 기반 서비스 무중단 배포 프로세스 구축</li>
+                        <li>SonarQube 소스 정적 분석 결과를 Github PR 댓글에 자동 등록하는 프로세스 구축</li>
+                        <li>플랫폼 활성 사용자 및 고객 수 집계 배치 개발</li>
+                        <li>Spring 통합 테스트 수행 속도 개선</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="experience-item">
+                <div class="experience-header">
+                    <span class="company-name">㈜온아이티시스템</span>
+                    <span class="period">2021.01 ~ 2023.02 (2년 2개월)</span>
+                </div>
+                <div class="role">통신사업부 · 사원</div>
+                <div class="experience-details">
+                    <strong>LG 유플러스 차세대 통합전산시스템(UCUBE) 개발</strong>
+                    <ul>
+                        <li>모놀리식 AS-IS 시스템을 MSA로 전환(판매 프로모션 서비스 담당)</li>
+                        <li>여러 도메인 통합 조회 전용 테이블 설계 및 데이터 전환</li>
+                        <li>프로모션 정책 조회 API 개발 및 쿼리 최적화</li>
+                        <li>TV 쿠폰 제공 위한 외부 서비스 연동 배치 개발</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="slide-number">3</div>
+        </div>
+        
+        <!-- Slide 4: Recent AI/LLM Project -->
+        <div class="slide">
+            <div class="project-detail-header">
+                <h2 class="project-detail-title">Recent AI/LLM Project</h2>
+                <span class="project-company-badge" style="background: linear-gradient(135deg, #FF6B6B, #4ECDC4);">2025</span>
+            </div>
+            
+            <div class="project-detail-content">
+                <div class="project-image-container">
+                    <img src="images/docs.png" 
+                         alt="LLM Platform" 
+                         style="width: 100%; height: auto; max-height: 350px; object-fit: contain;">
+                    <p style="margin-top: 15px; color: #666; font-size: 0.9em;">LLM 기반 질의 응답 및 문서 생성 서비스</p>
+                </div>
+                
+                <div class="project-info">
+                    <div class="project-section">
+                        <h3>🤖 프로젝트 개요</h3>
+                        <ul>
+                            <li><strong>Strands Agents 프레임워크</strong> - 에이전트 기반 문서 생성 워크플로우 개발</li>
+                            <li><strong>실시간 AI 추론 스트리밍</strong> - Redis Streams와 SSE를 활용한 청크 단위 전송 구현</li>
+                            <li><strong>DOCX 메타데이터 추출</strong> - 템플릿 문서 내 placeholder 자동 추출 에이전트 개발</li>
+                            <li><strong>RAG 시스템 구축</strong> - OpenAI VectorStore, AWS Bedrock Knowledge Bases 연동</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="project-section">
+                        <h3>🛠 기술 스택</h3>
+                        <div class="tech-stack-grid">
+                            <span class="tech-badge">Python</span>
+                            <span class="tech-badge">FastAPI</span>
+                            <span class="tech-badge">LLM</span>
+                            <span class="tech-badge">OpenAI API</span>
+                            <span class="tech-badge">Redis Streams</span>
+                            <span class="tech-badge">SSE</span>
+                            <span class="tech-badge">RAG</span>
+                            <span class="tech-badge">Vector DB</span>
+                            <span class="tech-badge">AWS Bedrock</span>
+                            <span class="tech-badge">Strands Agents</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">4</div>
+        </div>
+        
+        <!-- Slide 5: FIN2B SCF Platform Projects -->
+        <div class="slide">
+            <div class="project-detail-header">
+                <h2 class="project-detail-title">FIN2B Supply Chain Finance 플랫폼</h2>
+                <span class="project-company-badge">㈜핀투비</span>
+            </div>
+            
+            <div class="project-detail-content">
+                <div class="project-image-container">
+                    <img src="images/scf.png" 
+                         alt="FIN2B Platform" 
+                         style="width: 100%; height: auto; max-height: 350px; object-fit: contain;">
+                    <p style="margin-top: 15px; color: #666; font-size: 0.9em;">동남아 B2B 매출채권 공급망 금융 플랫폼</p>
+                </div>
+                
+                <div class="project-info">
+                    <div class="project-section">
+                        <h3>📊 주요 프로젝트</h3>
+                        <ul>
+                            <li><strong>AWS CodeDeploy 무중단 배포 구축</strong> - AutoScaling 인프라 구성, 분당 45,000 요청 처리</li>
+                            <li><strong>SonarQube CI/CD 통합</strong> - Github Actions 활용 코드 품질 자동화</li>
+                            <li><strong>Spring 테스트 최적화</strong> - 통합 테스트 속도 개선</li>
+                            <li><strong>신규 기능 개발</strong> - 활성 사용자 및 고객 집계 시스템 개발, 우리은행 베트남의 이체 요청 및 이체 결과 조회 전문 통신을 위한 배치 개발</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="project-section">
+                        <h3>🛠 기술 스택</h3>
+                        <div class="tech-stack-grid">
+                            <span class="tech-badge">Java</span>
+                            <span class="tech-badge">Spring Boot</span>
+                            <span class="tech-badge">JPA</span>
+                            <span class="tech-badge">MySQL</span>
+                            <span class="tech-badge">AWS</span>
+                            <span class="tech-badge">CodeDeploy</span>
+                            <span class="tech-badge">GitHub Actions</span>
+                            <span class="tech-badge">SonarQube</span>
+                            <span class="tech-badge">Docker</span>
+                            <span class="tech-badge">NGINX</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">5</div>
+        </div>
+        
+        <!-- Slide 6: LG U+ UCUBE Projects -->
+        <div class="slide">
+            <div class="project-detail-header">
+                <h2 class="project-detail-title">LG 유플러스 차세대 통합전산시스템(UCUBE)</h2>
+                <span class="project-company-badge">㈜온아이티시스템</span>
+            </div>
+            
+            <div class="project-detail-content">
+                <div class="project-image-container">
+                    <img src="images/uqube.png" 
+                         alt="UCUBE Migration" 
+                         style="width: 100%; height: auto; max-height: 350px; object-fit: contain;">
+                    <p style="margin-top: 15px; color: #666; font-size: 0.9em;">UQUBE MSA 전환 단계적 마이그레이션</p>
+                </div>
+                
+                <div class="project-info">
+                    <div class="project-section">
+                        <h3>🔄 주요 프로젝트</h3>
+                        <ul>
+                            <li><strong>MSA 아키텍처 전환</strong> - 판매 프로모션 서비스 담당</li>
+                            <li><strong>조회 성능 최적화</strong> - 조회 전용 테이블 설계로 30초→1초 개선</li>
+                            <li><strong>프로모션 정책 API</strong> - 복잡한 비즈니스 로직 구현 및 최적화</li>
+                            <li><strong>외부 서비스 연동</strong> - TV 쿠폰 제공 배치 시스템 개발</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="project-section">
+                        <h3>🛠 기술 스택</h3>
+                        <div class="tech-stack-grid">
+                            <span class="tech-badge">Java</span>
+                            <span class="tech-badge">Spring Boot</span>
+                            <span class="tech-badge">JPA</span>
+                            <span class="tech-badge">MySQL</span>
+                            <span class="tech-badge">MSA</span>
+                            <span class="tech-badge">Kafka</span>
+                            <span class="tech-badge">Oracle</span>
+                            <span class="tech-badge">MyBatis</span>
+                            <span class="tech-badge">Jenkins</span>
+                            <span class="tech-badge">REST API</span>
+                            <span class="tech-badge">Batch</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slide-number">6</div>
+        </div>
+        
+        <!-- Slide 7: Closing -->
+        <div class="slide title-slide">
+            <h1 style="font-size: 3em;">Thank You</h1>
+            <p class="subtitle">안정적이고 확장 가능한 서비스를 만드는<br>백엔드 개발자 고용순입니다</p>
+            <div class="slide-number">7</div>
+        </div>
+    </div>
+</body>
+</html>
